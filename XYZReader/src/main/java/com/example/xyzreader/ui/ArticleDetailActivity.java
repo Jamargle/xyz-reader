@@ -10,12 +10,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
-
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
@@ -23,7 +22,7 @@ import com.example.xyzreader.data.ItemsContract;
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
-public class ArticleDetailActivity extends ActionBarActivity
+public class ArticleDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private Cursor mCursor;
@@ -89,7 +88,9 @@ public class ArticleDetailActivity extends ActionBarActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mUpButtonContainer.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
                 @Override
-                public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
+                public WindowInsets onApplyWindowInsets(
+                        View view,
+                        WindowInsets windowInsets) {
                     view.onApplyWindowInsets(windowInsets);
                     mTopInset = windowInsets.getSystemWindowInsetTop();
                     mUpButtonContainer.setTranslationY(mTopInset);
@@ -108,12 +109,16 @@ public class ArticleDetailActivity extends ActionBarActivity
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(
+            int i,
+            Bundle bundle) {
         return ArticleLoader.newAllArticlesInstance(this);
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+    public void onLoadFinished(
+            Loader<Cursor> cursorLoader,
+            Cursor cursor) {
         mCursor = cursor;
         mPagerAdapter.notifyDataSetChanged();
 
@@ -139,7 +144,9 @@ public class ArticleDetailActivity extends ActionBarActivity
         mPagerAdapter.notifyDataSetChanged();
     }
 
-    public void onUpButtonFloorChanged(long itemId, ArticleDetailFragment fragment) {
+    public void onUpButtonFloorChanged(
+            long itemId,
+            ArticleDetailFragment fragment) {
         if (itemId == mSelectedItemId) {
             mSelectedItemUpButtonFloor = fragment.getUpButtonFloor();
             updateUpButtonPosition();
@@ -152,12 +159,16 @@ public class ArticleDetailActivity extends ActionBarActivity
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
+
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
-        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        public void setPrimaryItem(
+                ViewGroup container,
+                int position,
+                Object object) {
             super.setPrimaryItem(container, position, object);
             ArticleDetailFragment fragment = (ArticleDetailFragment) object;
             if (fragment != null) {
