@@ -1,5 +1,5 @@
-<com.example.xyzreader.ui.viewcomponents.DrawInsetsFrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.xyzreader.ui.viewcomponents.DrawInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/draw_insets_frame_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -18,15 +18,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/photo_placeholder">
-                <!--suppress AndroidLintContentDescription -->
+
                 <ImageView
                     android:id="@+id/photo"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/detail_photo_height"
+                    android:scaleType="centerCrop" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="112dp"
+                    android:layout_height="@dimen/photo_background_height"
                     android:background="@drawable/photo_background_protection" />
 
             </FrameLayout>
@@ -37,9 +38,10 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/detail_card_top_margin"
                 android:background="#fff"
-                android:elevation="2dp"
                 android:maxWidth="@dimen/detail_card_max_width"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:borderWidth="0dp"
+                app:elevation="@dimen/max_width_linear_layout_elevation">
 
                 <LinearLayout
                     android:id="@+id/meta_bar"
@@ -47,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/detail_metabar_vert_padding"
-                    android:background="#333"
+                    android:background="@color/meta_bar_color"
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/detail_metabar_vert_padding"
                     android:paddingLeft="@dimen/detail_inner_horiz_margin"
@@ -62,7 +64,7 @@
                         android:fontFamily="sans-serif-condensed"
                         android:lineSpacingMultiplier="0.9"
                         android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
-                        android:textColor="#fff"
+                        android:textColor="@color/detail_title"
                         android:textSize="@dimen/detail_title_text_size"
                         android:textStyle="bold" />
 
@@ -71,7 +73,7 @@
                         style="?android:attr/textAppearanceSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#8fff" />
+                        android:textColor="@color/detail_title_byline" />
                 </LinearLayout>
 
                 <TextView
@@ -81,27 +83,32 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/detail_inner_horiz_margin"
                     android:layout_marginRight="@dimen/detail_inner_horiz_margin"
+                    android:autoLink="web"
                     android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
+                    android:linksClickable="true"
                     android:paddingBottom="@dimen/detail_body_bottom_margin"
-                    android:textColor="@color/ltgray"
+                    android:textColor="@color/primary_text"
                     android:textColorLink="@color/theme_accent"
                     android:textSize="@dimen/detail_body_text_size" />
 
             </com.example.xyzreader.ui.viewcomponents.MaxWidthLinearLayout>
-        </FrameLayout>
-    </com.example.xyzreader.ui.viewcomponents.ObservableScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/share_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/fab_margin"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:background="@drawable/add_fab_background"
-        android:contentDescription="@string/action_share"
-        android:elevation="@dimen/fab_elevation"
-        android:src="@drawable/ic_share"
-        android:stateListAnimator="@animator/fab_state_list_anim" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/share_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                android:clickable="true"
+                android:contentDescription="@string/action_share"
+                android:focusable="true"
+                android:src="@drawable/ic_share"
+                app:borderWidth="0dp"
+                app:elevation="@dimen/fab_elevation"
+                app:layout_anchor="@id/meta_bar"
+                app:layout_anchorGravity="bottom|end" />
+
+        </android.support.design.widget.CoordinatorLayout>
+
+    </com.example.xyzreader.ui.viewcomponents.ObservableScrollView>
 
 </com.example.xyzreader.ui.viewcomponents.DrawInsetsFrameLayout>
