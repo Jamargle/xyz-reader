@@ -1,4 +1,4 @@
-package com.example.xyzreader.ui;
+package com.example.xyzreader.ui.details;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,7 +26,12 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
-import com.example.xyzreader.data.ArticleLoader;
+import com.example.xyzreader.utils.ArticleLoader;
+import com.example.xyzreader.ui.viewcomponents.DrawInsetsFrameLayout;
+import com.example.xyzreader.utils.ImageLoaderHelper;
+import com.example.xyzreader.ui.viewcomponents.ObservableScrollView;
+import com.example.xyzreader.ui.articles.ArticleListActivity;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -142,7 +147,7 @@ public class ArticleDetailFragment extends Fragment
         });
 
         mScrollView = (ObservableScrollView) mRootView.findViewById(R.id.scrollview);
-        mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
+        mScrollView.setCallback(new ObservableScrollView.Callback() {
             @Override
             public void onScrollChanged() {
                 mScrollY = mScrollView.getScrollY();

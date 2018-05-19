@@ -1,4 +1,4 @@
-package com.example.xyzreader.ui;
+package com.example.xyzreader.ui.details;
 
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
 import com.example.xyzreader.R;
-import com.example.xyzreader.data.ArticleLoader;
+import com.example.xyzreader.utils.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 
 /**

@@ -12,6 +12,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 
+import com.example.xyzreader.utils.SelectionBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 

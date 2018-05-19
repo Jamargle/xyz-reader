@@ -14,39 +14,40 @@
  * limitations under the License.
  */
 
-package com.example.xyzreader.ui;
+package com.example.xyzreader.ui.viewcomponents;
 
 import android.content.Context;
-import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ScrollView;
 
 /**
  * A custom ScrollView that can accept a scroll listener.
  */
-public class ObservableScrollView extends ScrollView {
-    private Callbacks mCallbacks;
+public final class ObservableScrollView extends ScrollView {
 
-    public ObservableScrollView(Context context, AttributeSet attrs) {
+    @Nullable
+    private Callback callback;
+
+    public ObservableScrollView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+    protected void onScrollChanged(final int l, final int t, final int oldl, final int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-        if (mCallbacks != null) {
-            mCallbacks.onScrollChanged();
+        if (callback != null) {
+            callback.onScrollChanged();
         }
     }
 
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    protected void onLayout(final boolean changed, final int l, final int t, final int r, final int b) {
         super.onLayout(changed, l, t, r, b);
-        int scrollY = getScrollY();
+        final int scrollY = getScrollY();
         // hack to call onScrollChanged on screen rotate
-        if (scrollY > 0 && mCallbacks != null) {
-            mCallbacks.onScrollChanged();
+        if (scrollY > 0 && callback != null) {
+            callback.onScrollChanged();
         }
     }
 
@@ -55,11 +56,14 @@ public class ObservableScrollView extends ScrollView {
         return super.computeVerticalScrollRange();
     }
 
-    public void setCallbacks(Callbacks listener) {
-        mCallbacks = listener;
+    public void setCallback(final Callback listener) {
+        callback = listener;
     }
 
-    public static interface Callbacks {
-        public void onScrollChanged();
+    public interface Callback {
+
+        void onScrollChanged();
+
     }
+
 }
