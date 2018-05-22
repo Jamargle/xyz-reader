@@ -320,12 +320,17 @@ public class ArticleDetailFragment extends Fragment
 
                         final Bitmap bitmap = imageContainer.getBitmap();
                         if (bitmap != null) {
-                            final Palette p = new Palette.Builder(bitmap).maximumColorCount(12).generate();
-                            mutedColor = p.getDarkMutedColor(DEFAULT_MUTED_COLOR);
-                            photoView.setImageBitmap(imageContainer.getBitmap());
-                            rootView.findViewById(R.id.meta_bar)
-                                    .setBackgroundColor(mutedColor);
-                            updateStatusBar();
+                            Palette.from(bitmap)
+                                    .maximumColorCount(12)
+                                    .generate(new Palette.PaletteAsyncListener() {
+                                        public void onGenerated(@NonNull final Palette palette) {
+                                            mutedColor = palette.getDarkMutedColor(DEFAULT_MUTED_COLOR);
+                                            photoView.setImageBitmap(imageContainer.getBitmap());
+                                            rootView.findViewById(R.id.meta_bar)
+                                                    .setBackgroundColor(mutedColor);
+                                            updateStatusBar();
+                                        }
+                                    });
                         }
                     }
 
