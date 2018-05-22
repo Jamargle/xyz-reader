@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -38,14 +41,14 @@ public class ArticleListActivity extends AppCompatActivity
                 final Intent intent) {
 
             if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
-                final boolean isRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
+                isRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
                 swipeRefreshLayout.setRefreshing(isRefreshing);
             }
         }
-
     };
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
+    private boolean isRefreshing = false;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -53,16 +56,18 @@ public class ArticleListActivity extends AppCompatActivity
         setContentView(R.layout.activity_article_list);
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
         recyclerView = findViewById(R.id.recycler_view);
         getSupportLoaderManager().initLoader(0, null, this);
 
         if (savedInstanceState == null) {
             refresh();
         }
-    }
-
-    private void refresh() {
-        startService(new Intent(this, UpdaterService.class));
     }
 
     @Override
@@ -109,7 +114,31 @@ public class ArticleListActivity extends AppCompatActivity
     @Override
     public void onArticleClicked(final long articleDbId) {
         startActivity(new Intent(Intent.ACTION_VIEW,
-                ItemsContract.Items.buildItemUri(articleDbId)));
+                                 ItemsContract.Items.buildItemUri(articleDbId)));
+    }
+
+    private void refresh() {
+        if (hasConnectivity(this)) {
+            startService(new Intent(this, UpdaterService.class));
+        } else {
+            Snackbar.make(
+                    findViewById(R.id.list_container),
+                    R.string.no_connection_message,
+                    Snackbar.LENGTH_LONG).show();
+
+            isRefreshing = false;
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    private boolean hasConnectivity(final Context context) {
+        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo info;
+        if (connectivityManager != null) {
+            info = connectivityManager.getActiveNetworkInfo();
+            return info != null && info.isConnected();
+        }
+        return false;
     }
 
 }
