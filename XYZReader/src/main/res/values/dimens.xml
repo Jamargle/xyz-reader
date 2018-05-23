@@ -6,8 +6,7 @@
     <dimen name="photo_background_height">112dp</dimen>
     <dimen name="max_width_linear_layout_elevation">4dp</dimen>
 
-    <dimen name="fab_elevation">4dp</dimen>
-    <dimen name="fab_press_translation_z">6dp</dimen>
+    <dimen name="fab_elevation">6dp</dimen>
     <dimen name="fab_margin">24dp</dimen>
 
     <!-- Standard spacing -->
