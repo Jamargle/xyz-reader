@@ -300,9 +300,7 @@ public class ArticleDetailFragment extends Fragment
         if (cursor == null) {
             bodyView.setText("N/A");
         } else {
-            bodyView.setText(Html.fromHtml(
-                    cursor.getString(ArticleLoader.Query.BODY)
-                            .replaceAll("(\r\n|\n)", "<br />")));
+            bodyView.setText(Html.fromHtml(cursor.getString(ArticleLoader.Query.BODY)));
         }
     }
 
