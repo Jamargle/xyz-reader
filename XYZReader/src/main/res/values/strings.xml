@@ -9,5 +9,6 @@
 
     <string name="up">Up</string>
     <string name="no_connection_message">There is no Internet connection. Please check.</string>
+    <string name="shared_transation">shared_transition</string>
 
 </resources>

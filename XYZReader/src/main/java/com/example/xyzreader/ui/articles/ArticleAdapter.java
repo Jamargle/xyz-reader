@@ -50,7 +50,13 @@ public final class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.Vi
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                listener.onArticleClicked(getItemId(holder.getAdapterPosition()));
+                final String transitionName;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    transitionName = holder.thumbnailView.getTransitionName();
+                } else {
+                    transitionName = null;
+                }
+                listener.onArticleClicked(getItemId(holder.getAdapterPosition()), holder.thumbnailView, transitionName);
             }
         });
         return holder;
@@ -77,7 +83,10 @@ public final class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.Vi
 
     interface OnArticleClickListener {
 
-        void onArticleClicked(long articleDbId);
+        void onArticleClicked(
+                long articleDbId,
+                final View thumbnailView,
+                final String transitionName);
 
     }
 

@@ -9,14 +9,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-
+import android.view.MenuItem;
+import android.view.View;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
@@ -82,6 +85,15 @@ public class ArticleListActivity extends AppCompatActivity
         unregisterReceiver(refreshingReceiver);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            supportFinishAfterTransition();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(
@@ -112,9 +124,21 @@ public class ArticleListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onArticleClicked(final long articleDbId) {
-        startActivity(new Intent(Intent.ACTION_VIEW,
-                                 ItemsContract.Items.buildItemUri(articleDbId)));
+    public void onArticleClicked(
+            final long articleDbId,
+            @Nullable final View view,
+            @Nullable final String transitionName) {
+        final Intent intent = new Intent(Intent.ACTION_VIEW, ItemsContract.Items.buildItemUri(articleDbId));
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP
+                && view != null
+                && transitionName != null) {
+
+            final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, transitionName).toBundle();
+            startActivity(intent, bundle);
+        } else {
+            startActivity(intent);
+        }
     }
 
     private void refresh() {

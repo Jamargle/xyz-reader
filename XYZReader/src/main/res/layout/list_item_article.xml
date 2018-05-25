@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/photo_placeholder"
-            android:scaleType="fitStart"/>
+            android:scaleType="fitStart"
+            android:transitionName="@string/shared_transation"/>
 
         <TextView
             android:id="@+id/article_title"
