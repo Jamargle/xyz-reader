@@ -2,13 +2,15 @@ package com.example.xyzreader.ui.details;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
@@ -22,15 +24,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.xyzreader.R;
 import com.example.xyzreader.ui.articles.ArticleListActivity;
 import com.example.xyzreader.ui.viewcomponents.DrawInsetsFrameLayout;
 import com.example.xyzreader.ui.viewcomponents.ObservableScrollView;
 import com.example.xyzreader.utils.ArticleLoader;
-import com.example.xyzreader.utils.ImageLoaderHelper;
 
 import static com.example.xyzreader.utils.DateParsingUtil.getFormattedPublishedDateAfterStartOfEpoch;
 import static com.example.xyzreader.utils.DateParsingUtil.getFormattedPublishedDateBeforeStartOfEpoch;
@@ -308,35 +311,48 @@ public class ArticleDetailFragment extends Fragment
         if (cursor == null) {
             return;
         }
-        ImageLoaderHelper.getInstance(getActivity()).getImageLoader().get(
-                cursor.getString(ArticleLoader.Query.PHOTO_URL),
-                new ImageLoader.ImageListener() {
+        Glide.with(this)
+                .load(cursor.getString(ArticleLoader.Query.PHOTO_URL))
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public void onResponse(
-                            final ImageLoader.ImageContainer imageContainer,
-                            final boolean b) {
+                    public boolean onLoadFailed(
+                            @Nullable final GlideException e,
+                            final Object model,
+                            final Target<Drawable> target,
+                            final boolean isFirstResource) {
 
-                        final Bitmap bitmap = imageContainer.getBitmap();
-                        if (bitmap != null) {
-                            Palette.from(bitmap)
+                        if (getParentFragment() != null) {
+                            getParentFragment().startPostponedEnterTransition();
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(
+                            final Drawable resource,
+                            final Object model,
+                            final Target<Drawable> target,
+                            final DataSource dataSource,
+                            final boolean isFirstResource) {
+
+                        if (getParentFragment() != null) {
+                            getParentFragment().startPostponedEnterTransition();
+                        }
+                        if (resource instanceof BitmapDrawable) {
+                            Palette.from(((BitmapDrawable) resource).getBitmap())
                                     .maximumColorCount(12)
                                     .generate(new Palette.PaletteAsyncListener() {
                                         public void onGenerated(@NonNull final Palette palette) {
                                             mutedColor = palette.getDarkMutedColor(DEFAULT_MUTED_COLOR);
-                                            photoView.setImageBitmap(imageContainer.getBitmap());
-                                            rootView.findViewById(R.id.meta_bar)
-                                                    .setBackgroundColor(mutedColor);
+                                            rootView.findViewById(R.id.meta_bar).setBackgroundColor(mutedColor);
                                             updateStatusBar();
                                         }
                                     });
                         }
+                        return false;
                     }
-
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                    }
-                });
+                })
+                .into(photoView);
     }
 
 }

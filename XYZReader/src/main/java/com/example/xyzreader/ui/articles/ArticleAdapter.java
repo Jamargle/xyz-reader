@@ -1,18 +1,18 @@
 package com.example.xyzreader.ui.articles;
 
 import android.database.Cursor;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-
+import com.bumptech.glide.Glide;
 import com.example.xyzreader.R;
-import com.example.xyzreader.ui.viewcomponents.DynamicHeightNetworkImageView;
 import com.example.xyzreader.utils.ArticleLoader;
-import com.example.xyzreader.utils.ImageLoaderHelper;
 
 import static com.example.xyzreader.utils.DateParsingUtil.getFormattedPublishedDateAfterStartOfEpoch;
 import static com.example.xyzreader.utils.DateParsingUtil.getFormattedPublishedDateBeforeStartOfEpoch;
@@ -65,7 +65,6 @@ public final class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.Vi
 
         holder.bindArticle(
                 cursor.getString(ArticleLoader.Query.THUMB_URL),
-                cursor.getFloat(ArticleLoader.Query.ASPECT_RATIO),
                 cursor.getString(ArticleLoader.Query.TITLE),
                 cursor.getString(ArticleLoader.Query.AUTHOR),
                 cursor.getString(ArticleLoader.Query.PUBLISHED_DATE));
@@ -84,7 +83,7 @@ public final class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.Vi
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private DynamicHeightNetworkImageView thumbnailView;
+        private ImageView thumbnailView;
         private TextView titleView;
         private TextView subtitleView;
 
@@ -97,15 +96,10 @@ public final class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.Vi
 
         void bindArticle(
                 final String imageUrl,
-                final float imageAspectRatio,
                 final String title,
                 final String author,
                 final String publishedDate) {
 
-            thumbnailView.setImageUrl(
-                    imageUrl,
-                    ImageLoaderHelper.getInstance(itemView.getContext()).getImageLoader());
-            thumbnailView.setAspectRatio(imageAspectRatio);
             titleView.setText(title);
 
             if (isPreviousStartOfEpoch(parsePublishedDate(publishedDate))) {
@@ -119,6 +113,8 @@ public final class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.Vi
                                 + "<br/>" + " by "
                                 + author));
             }
+
+            Glide.with(itemView.getContext()).load(imageUrl).into(thumbnailView);
         }
 
     }
